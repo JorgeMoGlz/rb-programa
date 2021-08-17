@@ -4,3 +4,5 @@ files/*.json
 rb-entvirt/
 impresiones/compras/*.pdf
 impresiones/ventas/*.pdf
+disparos/*.csv
+foto/*.jpg
