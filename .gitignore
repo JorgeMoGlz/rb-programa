@@ -2,3 +2,5 @@ __pycache__/
 database/*.db
 files/*.json
 rb-entvirt/
+impresiones/compras/*.pdf
+impresiones/ventas/*.pdf
