@@ -8,7 +8,7 @@ from PyQt5.QtWidgets import *
 
 from datetime import datetime
 
-import db, formats, json_files
+import db, formats, json_files, pdf
 
 # Rutas generales
 json_oro = r"C:\raisa-bruker\files\precios_oro.json"
@@ -309,6 +309,11 @@ class VentanaCompras(QWidget):
         for p in piezas:
             db.pieza(p)
 
+        pdf.impresion_compra(self.id_compra, self.elemento, self.total)
+
+        compra_realizada = QMessageBox.information(
+                self, "Se creo la compra", "Se guardaron los datos de la compra en compras"
+            )
 
 class VentanaPrecios(QWidget):
     def __init__(self):

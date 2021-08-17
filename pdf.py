@@ -86,4 +86,4 @@ def impresion_compra(n_compra, tipo_compra, total_compra):
 
     pdf.output(pdf_compras + "/" + "Compra #{} - {}.pdf".format(n_compra, tipo_compra))
 
-impresion_compra(2, "Plata", 65.54)
+# impresion_compra(2, "Plata", 65.54)

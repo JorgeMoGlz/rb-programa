@@ -71,7 +71,7 @@ def precios_plata(precio_plata):
         json.dump(dict_precios, fichero_plata)
 
 def compra_oro(descripcion, peso, aleacion, porcentaje, precio_ingresado, precio_real):
-    precio_ingresado = float(precio_ingresado)
+    precio_ingresado = "{:.2f}".format(float(precio_ingresado))
     
     precio_calculado = (float(precio_real)*float(peso))
     precio_calculado = "{:.2f}".format(precio_calculado)
@@ -94,7 +94,7 @@ def compra_oro(descripcion, peso, aleacion, porcentaje, precio_ingresado, precio
         json.dump(compras_oro, fichero_compra_oro)
 
 def compra_plata(descripcion, peso, aleacion, porcentaje, precio_ingresado, precio_real):
-    precio_ingresado = float(precio_ingresado)
+    precio_ingresado = "{:.2f}".format(float(precio_ingresado))
 
     precio_calculado = (float(precio_real)*float(peso))
     precio_calculado = "{:.2f}".format(precio_calculado)
