@@ -45,6 +45,7 @@ class VentanaVentas(QWidget):
         layout_encabezado = QHBoxLayout()
         layout_obtenerinfo = QHBoxLayout()
         layout_informacion = QHBoxLayout()
+        layout_confirmar = QHBoxLayout()
 
         # Layouts terciarios
         layout_datos = QVBoxLayout()
@@ -53,6 +54,7 @@ class VentanaVentas(QWidget):
         layout_principal.addLayout(layout_encabezado)
         layout_principal.addLayout(layout_obtenerinfo)
         layout_principal.addLayout(layout_informacion)
+        layout_principal.addLayout(layout_confirmar)
         
         ############################## WIDGETS ##############################
         # Widgets del layout encabezado
@@ -76,6 +78,10 @@ class VentanaVentas(QWidget):
         self.label_joyeria = Caja("Elementos de interés\n2")
         self.label_contaminantes = Caja("Contaminantes\n3")
 
+        # Widgets del layout confirmar
+        button_confirmar = QPushButton("Confirmar compra")
+        button_confirmar.clicked.connect(self.confirmar)
+
         #####################################################################
 
         # Agregar widgets a los respectivos layouts
@@ -89,6 +95,8 @@ class VentanaVentas(QWidget):
         layout_datos.addWidget(self.label_aleacion)
         layout_datos.addWidget(self.label_joyeria)
         layout_datos.addWidget(self.label_contaminantes)
+
+        layout_confirmar.addWidget(button_confirmar)
 
         # Agregar layout principal a la ventana
         self.setLayout(layout_principal)
@@ -136,6 +144,8 @@ class VentanaVentas(QWidget):
         self.label_joyeria.setText(info_joy)
         self.label_contaminantes.setText(info_cont)
 
+    def confirmar(self):
+        print("Confirmar venta")
 
 class VentanaCompras(QWidget):
     def __init__(self):
@@ -658,9 +668,6 @@ class VentanaPrincipal(QMainWindow):
 
         self.window_venta = VentanaVentas()
         self.window_venta.show()
-
-
-
 
 
 
