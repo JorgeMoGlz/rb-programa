@@ -7,6 +7,8 @@ json_plata = r"C:\raisa-bruker\files\precios_plata.json"
 json_compra_oro = r"C:\raisa-bruker\files\compra_oro.json"
 json_compra_plata = r"C:\raisa-bruker\files\compra_plata.json"
 
+json_results = r"C:\raisa-bruker\files\results.json"
+
 def precios_oro(precio_oro):
 
     if os.path.exists(json_oro):
@@ -116,10 +118,38 @@ def compra_plata(descripcion, peso, aleacion, porcentaje, precio_ingresado, prec
     with open(json_compra_plata, 'w') as fichero_compra_plata:
         json.dump(compras_plata, fichero_compra_plata)
 
+def datos_results():
+    with open(json_results) as fichero_results:
+        registros_results = json.load(fichero_results)
 
+    conjunto_joyeria = set(["Alloy 1", "Au", "Ag", "Cu", "Zn", "Pt", "Pd", "Rh", "Ru", "Fe", "Rh"])
+    conjunto_contaminantes = set(["Sn", "Pb", "Ni", "W"])
 
-    
-    
-        
+    keys_results = list(registros_results[0].keys())
 
+    conjunto_keys_results = set(keys_results)
 
+    joyeria_igual = list(conjunto_joyeria & conjunto_keys_results)
+    contaminantes_iguales = list(conjunto_contaminantes & conjunto_keys_results)
+
+    datos_joyeria = {}
+    datos_contaminantes = {}
+
+    for registro in registros_results:
+        for elemento in joyeria_igual:
+            if registro[elemento] != 0.0:
+                datos_joyeria[elemento] = registro[elemento]
+
+        for elemento in contaminantes_iguales:
+            if registro[elemento] != 0.0:
+                datos_contaminantes[elemento] = registro[elemento]
+
+    if datos_joyeria["Alloy 1"] == "No Match":
+        if datos_joyeria.get("Au") != None:
+            datos_joyeria["Alloy 1"] = "{} %".format(int((round(float(datos_joyeria["Au"]), 0)) * 10))
+        if datos_joyeria.get("Ag") != None:
+            datos_joyeria["Alloy 1"] = "Ley {}".format(int((round(float(datos_joyeria["Ag"]), 0)) * 10))
+
+    return [datos_joyeria, datos_contaminantes]
+
+# datos_results()
