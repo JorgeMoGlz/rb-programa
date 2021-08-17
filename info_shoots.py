@@ -7,7 +7,7 @@ import pandas as pd
 csv_results = r"C:\raisa-bruker\disparos\Results.csv"
 json_results = r"C:\raisa-bruker\files\results.json"
 
-def limpiar_results(csv_results):
+def limpiar_results():
     df_results = pd.read_csv(csv_results)
 
     # Columnas a utilizar

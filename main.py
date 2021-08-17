@@ -17,6 +17,8 @@ json_plata = r"C:\raisa-bruker\files\precios_plata.json"
 json_compra_oro = r"C:\raisa-bruker\files\compra_oro.json"
 json_compra_plata = r"C:\raisa-bruker\files\compra_plata.json"
 
+foto_pieza = r"C:\raisa-bruker\foto"
+
 class Caja(QLabel):
     def __init__(self, texto="", fuente="Arial", tam=16, color="", alV=Qt.AlignVCenter, alH=Qt.AlignHCenter):
         super().__init__()
@@ -26,6 +28,114 @@ class Caja(QLabel):
         font = QFont(fuente, tam)
         self.setFont(font)
         self.setAlignment(alH | alV)
+
+class VentanaVentas(QWidget):
+    def __init__(self):
+        super().__init__()
+
+        # Configuración de la ventana
+        self.setWindowTitle("Venta de analisis")
+        self.setMinimumSize(700, 360)
+
+        # Layout principal
+        layout_principal = QVBoxLayout()
+        layout_principal.setSpacing(10)
+
+        # Layouts secundarios
+        layout_encabezado = QHBoxLayout()
+        layout_obtenerinfo = QHBoxLayout()
+        layout_informacion = QHBoxLayout()
+
+        # Layouts terciarios
+        layout_datos = QVBoxLayout()
+
+        # Agregar layouts secundarios al principal
+        layout_principal.addLayout(layout_encabezado)
+        layout_principal.addLayout(layout_obtenerinfo)
+        layout_principal.addLayout(layout_informacion)
+        
+        ############################## WIDGETS ##############################
+        # Widgets del layout encabezado
+        label_titulo = Caja("Analisis", "Arial")
+
+        # Widgets del layout obtenerinfo
+        button_foto = QPushButton("Información del disparo")
+        button_foto.clicked.connect(self.obtener_foto)
+        
+        button_info = QPushButton("Obtener información del disparo")
+        button_info.clicked.connect(self.obtener_info)
+
+        # Widgets del layout informacion
+        self.label_foto = Caja()
+        foto = QPixmap(r"C:\raisa-bruker\images\imagen-vacia.jpg").scaled(QSize(50, 50))
+        self.label_foto.setPixmap(foto)
+        self.label_foto.setScaledContents(True)
+
+        # Widgets del layout datos
+        self.label_aleacion = Caja("Aleacion\n1")
+        self.label_joyeria = Caja("Elementos de interés\n2")
+        self.label_contaminantes = Caja("Contaminantes\n3")
+
+        #####################################################################
+
+        # Agregar widgets a los respectivos layouts
+        layout_encabezado.addWidget(label_titulo)
+        
+        layout_obtenerinfo.addWidget(button_foto)
+        layout_obtenerinfo.addWidget(button_info)
+
+        layout_informacion.addWidget(self.label_foto)
+        layout_informacion.addLayout(layout_datos)
+        layout_datos.addWidget(self.label_aleacion)
+        layout_datos.addWidget(self.label_joyeria)
+        layout_datos.addWidget(self.label_contaminantes)
+
+        # Agregar layout principal a la ventana
+        self.setLayout(layout_principal)
+        
+        # Atributo para cerrar todas las ventanas al cerrar la ventana principal
+        self.setAttribute(Qt.WA_QuitOnClose, False)
+
+    def obtener_foto(self):
+        print("Foto obtenida")
+        f = [arch.name for arch in os.scandir(foto_pieza) if arch.is_file()][0]
+
+        nueva_foto = QPixmap(foto_pieza + "/" + f).scaled(QSize(50, 50))
+
+        self.label_foto.setPixmap(nueva_foto)
+    
+    def obtener_info(self):
+        joyeria, contaminantes = json_files.datos_results()
+        self.label_aleacion.setText(joyeria["Alloy 1"])
+        
+        joy = []
+        cont = []
+        
+        for key in joyeria:
+            if key == "Alloy 1":
+                pass
+            else:
+                joy.append("{}: {}".format(key, round(float(joyeria[key]), 2)))
+        
+        for key in contaminantes:
+            if key == "Alloy 1":
+                pass
+            else:
+                cont.append("{}: {}".format(key, round(float(contaminantes[key]), 2)))
+        
+        if len(joy) == 0:
+            info_joy = "Sin elementos de joyeria"
+        else:
+            info_joy = ' '.join([str(elem) for elem in joy])
+
+        if len(cont) == 0:
+            info_cont = "Sin elementos contaminantes"
+        else:
+            info_cont = ' '.join([str(elem) for elem in cont])
+
+        self.label_joyeria.setText(info_joy)
+        self.label_contaminantes.setText(info_cont)
+
 
 class VentanaCompras(QWidget):
     def __init__(self):
@@ -500,8 +610,10 @@ class VentanaPrincipal(QMainWindow):
         # Widgets del layout acciones
         button_compras = QPushButton("Compra de piezas")
         button_compras.clicked.connect(self.comprar_piezas)
+
         button_ventas = QPushButton("Venta de analisis")
-        
+        button_ventas.clicked.connect(self.venta_analisis)
+
         #####################################################################
 
         # Agregar widgets a los respectivos layouts
@@ -541,7 +653,11 @@ class VentanaPrincipal(QMainWindow):
             self.window_compras = VentanaCompras()
             self.window_compras.show()
 
+    def venta_analisis(self):
+        print("Vender analisis")
 
+        self.window_venta = VentanaVentas()
+        self.window_venta.show()
 
 
 

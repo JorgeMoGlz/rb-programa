@@ -1,6 +1,8 @@
 import os
 import json
 
+import info_shoots
+
 json_oro = r"C:\raisa-bruker\files\precios_oro.json"
 json_plata = r"C:\raisa-bruker\files\precios_plata.json"
 
@@ -119,6 +121,8 @@ def compra_plata(descripcion, peso, aleacion, porcentaje, precio_ingresado, prec
         json.dump(compras_plata, fichero_compra_plata)
 
 def datos_results():
+    info_shoots.limpiar_results()
+    
     with open(json_results) as fichero_results:
         registros_results = json.load(fichero_results)
 
