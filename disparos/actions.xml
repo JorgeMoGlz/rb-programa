@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<actionfile>
+  <fileversion>0.01</fileversion>
+  <instrumentserialnumber>800N8580</instrumentserialnumber>
+  <actionlist>
+    <replace type="action" action="connect" trigger="broadcast" parameter="automatic" />
+  </actionlist>
+</actionfile>

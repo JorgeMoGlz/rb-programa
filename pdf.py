@@ -6,6 +6,49 @@ json_compra_oro = r"C:\raisa-bruker\files\compra_oro.json"
 json_compra_plata = r"C:\raisa-bruker\files\compra_plata.json"
 
 pdf_compras = r"C:\raisa-bruker\impresiones\compras"
+pdf_ventas = r"C:\raisa-bruker\impresiones\ventas"
+
+def impresion_venta(foto, joyeria, contaminantes):
+    # Instancia de FPDF class
+    pdf = FPDF(format='letter', unit='in')
+
+    # Se agrega una página, sino, no se crea el documento
+    pdf.add_page()
+
+    # Fuente del documento
+    pdf.set_font('Times', '', 10.0)
+
+    espacio_efectivo = pdf.w - 2*pdf.l_margin
+
+    pdf.ln(0.5)
+
+    # Título de la tabla
+    pdf.set_font('Times', 'B', 14.0)
+    pdf.cell(espacio_efectivo, 0.0, "Venta de analisis", align='C')
+    pdf.set_font('Times', '', 10.0)
+    pdf.ln(0.4)
+
+    pdf.image(foto, w=1)
+
+    pdf.set_font('Times','B',12.0) 
+    pdf.cell(espacio_efectivo, 0.0, 'Datos del disparo', align='C')
+    pdf.set_font('Times','',10.0) 
+    pdf.ln(0.3)
+
+    pdf.set_font('Times','B',12.0) 
+    pdf.cell(espacio_efectivo, 0.0, 'Elementos de joyería: {}'.format(joyeria), align='C')
+    pdf.set_font('Times','',10.0) 
+    pdf.ln(0.3)
+
+    pdf.set_font('Times','B',12.0) 
+    pdf.cell(espacio_efectivo, 0.0, 'Elementos contaminantes: {}'.format(contaminantes), align='C')
+    pdf.set_font('Times','',10.0) 
+    pdf.ln(0.3)
+
+
+    pdf.output(pdf_ventas + "/" + "Venta nueva.pdf")
+
+impresion_venta(r"C:\raisa-bruker\foto\aretes-abstracciones-pluma-01-400x400.jpg", "Zn: 9.28 Cu: 26.04 Au: 58.6", "Ni: 6.08")
 
 
 def impresion_compra(n_compra, tipo_compra, total_compra):
@@ -87,3 +130,5 @@ def impresion_compra(n_compra, tipo_compra, total_compra):
     pdf.output(pdf_compras + "/" + "Compra #{} - {}.pdf".format(n_compra, tipo_compra))
 
 # impresion_compra(2, "Plata", 65.54)
+
+

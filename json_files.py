@@ -21,10 +21,10 @@ def precios_oro(precio_oro):
                 "14K", "13K", "12K", "11K", "10K",
                 "9K", "8K", "7K", "6K"]
 
-    porcentaje = [99.90, 95.75, 91.59, 87.42, 83.25,
-                  79.09, 74.92, 70.75, 66.59, 62.42,
-                  58.26, 54.09, 49.92, 45.76, 41.59,
-                  37.42, 33.26, 29.09, 24.93]
+    porcentaje = [100.00, 95.75, 91.00, 87.42, 83.25,
+                  79.09, 75.00, 69.00, 65.00, 62.42,
+                  58.30, 53.50, 48.00, 45.00, 41.50,
+                  37.00, 31.00, 27.00, 23.00]
 
     precios = []
 
@@ -32,7 +32,7 @@ def precios_oro(precio_oro):
         if p == 99.90:
             precios.append(precio_oro)
         else:
-            precios.append(round((p*precio_oro)/99.90, 2))
+            precios.append(round((p*precio_oro)/100.00, 2))
     
     dict_precios = []
     
@@ -60,7 +60,7 @@ def precios_plata(precio_plata):
         if p == 99.90:
             precios.append(precio_plata)
         else:
-            precios.append(round((p*precio_plata)/99.90, 2))
+            precios.append(round((p*precio_plata)/100.00, 2))
 
     dict_precios = []
     

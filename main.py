@@ -41,6 +41,11 @@ class VentanaVentas(QWidget):
         layout_principal = QVBoxLayout()
         layout_principal.setSpacing(10)
 
+        # Variables generales
+        self.foto_actual = ""
+        self.elementos_joyeria = ""
+        self.elementos_contaminantes = ""
+
         # Layouts secundarios
         layout_encabezado = QHBoxLayout()
         layout_obtenerinfo = QHBoxLayout()
@@ -108,9 +113,12 @@ class VentanaVentas(QWidget):
         print("Foto obtenida")
         f = [arch.name for arch in os.scandir(foto_pieza) if arch.is_file()][0]
 
+        self.foto_actual = foto_pieza + "/" + f
         nueva_foto = QPixmap(foto_pieza + "/" + f).scaled(QSize(50, 50))
 
         self.label_foto.setPixmap(nueva_foto)
+
+        print(self.foto_actual)
     
     def obtener_info(self):
         joyeria, contaminantes = json_files.datos_results()
@@ -141,11 +149,17 @@ class VentanaVentas(QWidget):
         else:
             info_cont = ' '.join([str(elem) for elem in cont])
 
+        self.elementos_joyeria = info_joy
+        self.elementos_contaminantes = info_cont
+
         self.label_joyeria.setText(info_joy)
         self.label_contaminantes.setText(info_cont)
 
+        print(self.elementos_contaminantes)
+        print(self.elementos_joyeria)
+
     def confirmar(self):
-        print("Confirmar venta")
+        pdf.impresion_venta(self.foto_actual, self.elementos_joyeria, self.elementos_contaminantes)
 
 class VentanaCompras(QWidget):
     def __init__(self):
