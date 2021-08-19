@@ -5,4 +5,6 @@ rb-entvirt/
 impresiones/compras/*.pdf
 impresiones/ventas/*.pdf
 disparos/*.csv
+disparos/*.pdz
+disparos/*.xml
 foto/*.jpg
