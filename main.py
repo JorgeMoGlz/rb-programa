@@ -160,6 +160,7 @@ class VentanaVentas(QWidget):
 
     def confirmar(self):
         pdf.impresion_venta(self.foto_actual, self.elementos_joyeria, self.elementos_contaminantes)
+        print("PDF creado")
 
 class VentanaCompras(QWidget):
     def __init__(self):
@@ -180,8 +181,6 @@ class VentanaCompras(QWidget):
         # Variable para saber la aleacion
         self.aleacion = "24K"
 
-        # Variable porcentaje
-        self.porcentaje = 0
 
         # Creación de la compra
         self.id_oro, act_oro, self.precio_oro = db.ultimo_precio_oro()[0]
@@ -207,6 +206,9 @@ class VentanaCompras(QWidget):
         
         with open(json_plata) as fichero_plata:
             self.datos_plata = json.load(fichero_plata)
+        
+        # Variable porcentaje
+        self.porcentaje = self.datos_oro[0]["Porcentaje"]
 
         # Configuración de la ventana
         self.setWindowTitle("Compra de piezas")
@@ -244,7 +246,6 @@ class VentanaCompras(QWidget):
         self.combobox_elemento.addItem("Oro")
         self.combobox_elemento.addItem("Plata")
         self.combobox_elemento.activated[str].connect(self.seleccion)
-        
 
         self.checkbox_lote = QCheckBox("Por lote")
         self.checkbox_lote.stateChanged.connect(self.lote)
@@ -323,7 +324,9 @@ class VentanaCompras(QWidget):
 
             self.elemento = "Plata"
             self.precio = self.precio_plata
-        
+
+            self.porcentaje = self.datos_plata[0]["Porcentaje"]
+
         if text == "Oro":
             self.aleacion = "24K"
             self.combobox_pureza.clear()
@@ -332,6 +335,8 @@ class VentanaCompras(QWidget):
 
             self.elemento = "Oro"
             self.precio = self.precio_oro
+
+            self.porcentaje = self.datos_oro[0]["Porcentaje"]
 
     def lote(self, state):
         if state == Qt.Checked:
@@ -358,7 +363,7 @@ class VentanaCompras(QWidget):
                     self.porcentaje = dato["Porcentaje"]
 
         print(self.precio)
-        
+  
     def obtener_datos(self):
         print("Datos obtenidos")
 
