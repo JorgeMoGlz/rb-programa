@@ -29,6 +29,89 @@ class Caja(QLabel):
         self.setFont(font)
         self.setAlignment(alH | alV)
 
+class VentanaConsultas(QWidget):
+    def __init__(self):
+        super().__init__()
+
+        # Configuración de la ventana
+        self.setWindowTitle("Consultas")
+        self.showMaximized()
+
+        # Layout principal
+        layout_principal = QVBoxLayout()
+
+        # Layouts secundarios
+        layout_encabezado = QHBoxLayout()
+        layout_calendario = QHBoxLayout()
+        layout_fechas = QHBoxLayout()
+        layout_consultar = QHBoxLayout()
+        layout_informacion = QHBoxLayout()
+
+        # Agregar layouts secundarios al principal
+        layout_principal.addLayout(layout_encabezado)
+        layout_principal.addLayout(layout_calendario)
+        layout_principal.addLayout(layout_fechas)
+        layout_principal.addLayout(layout_consultar)
+        layout_principal.addLayout(layout_informacion)
+
+        ############################## WIDGETS ##############################
+        # Widgets del layout encabezado
+        label_titulo = Caja("Pieza analizada", "Arial")
+
+        # Widgets del layout calendario
+        calendar_1 = QCalendarWidget()
+        calendar_1.setGridVisible(True)
+        calendar_1.clicked.connect(self.fecha_inicial)
+
+        calendar_2 = QCalendarWidget()
+        calendar_2.setGridVisible(True)
+        calendar_2.clicked.connect(self.fecha_final)
+
+        # Widgets del layout fechas
+        self.label_fecha_1 = Caja("Fecha inicial", "Arial")
+        self.label_fecha_2 = Caja("Fecha final", "Arial")
+
+        # Widgets del layout consultar
+        button_consultar = QPushButton("Consultar compras")
+        button_consultar.clicked.connect(self.consultar)
+
+        # Widgets del layout información
+        self.table_consulta = QTableWidget()
+
+        #####################################################################
+
+        # Agregar widgets a los respectivos layouts
+        layout_encabezado.addWidget(label_titulo)
+        
+        layout_calendario.addWidget(calendar_1)
+        layout_calendario.addWidget(calendar_2)
+
+        layout_fechas.addWidget(self.label_fecha_1)
+        layout_fechas.addWidget(self.label_fecha_2)
+
+        layout_consultar.addWidget(button_consultar)
+
+        layout_informacion.addWidget(self.table_consulta)
+
+        # Agregar layout principal a la ventana
+        self.setLayout(layout_principal)
+
+        # Atributo para cerrar todas las ventanas al cerrar la ventana principal
+        self.setAttribute(Qt.WA_QuitOnClose, False)
+    
+    def fecha_inicial(self, date):
+        self.fecha_1 = formats.format_stringdate(date.toString())
+        self.label_fecha_1.setText(self.fecha_1)
+        print(formats.format_stringdate(date.toString()))
+    
+    def fecha_final(self, date):
+        self.fecha_2 = formats.format_stringdate(date.toString())
+        self.label_fecha_2.setText(self.fecha_2)
+        print(formats.format_stringdate(date.toString()))
+
+    def consultar(self):
+        print("Consulta")
+
 class VentanaVentas(QWidget):
     def __init__(self):
         super().__init__()
@@ -614,11 +697,13 @@ class VentanaPrincipal(QMainWindow):
         layout_encabezado = QHBoxLayout()
         layout_actualizacion = QHBoxLayout()
         layout_acciones = QHBoxLayout()
+        layout_consultas = QHBoxLayout()
 
         # Agregar layouts secundarios al principal
         layout_principal.addLayout(layout_encabezado)
         layout_principal.addLayout(layout_actualizacion)
         layout_principal.addLayout(layout_acciones)
+        layout_principal.addLayout(layout_consultas)
 
         ############################## WIDGETS ##############################
         # Widgets del layout encabezado
@@ -643,6 +728,10 @@ class VentanaPrincipal(QMainWindow):
         button_ventas = QPushButton("Venta de analisis")
         button_ventas.clicked.connect(self.venta_analisis)
 
+        # Widgets del layout consultas
+        button_consultas = QPushButton("Consultas de ventas")
+        button_consultas.clicked.connect(self.consultas)
+
         #####################################################################
 
         # Agregar widgets a los respectivos layouts
@@ -656,6 +745,8 @@ class VentanaPrincipal(QMainWindow):
 
         layout_acciones.addWidget(button_compras)
         layout_acciones.addWidget(button_ventas)
+
+        layout_consultas.addWidget(button_consultas)
 
         # Layout principal agregado a la ventana
         widget = QWidget()
@@ -688,7 +779,11 @@ class VentanaPrincipal(QMainWindow):
         self.window_venta = VentanaVentas()
         self.window_venta.show()
 
+    def consultas(self):
+        print("Consulta de ventas")
 
+        self.window_consulta = VentanaConsultas()
+        self.window_consulta.show()
 
 if __name__=="__main__":
     app = QApplication(sys.argv)

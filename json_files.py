@@ -105,9 +105,6 @@ def compra_plata(descripcion, peso, aleacion, porcentaje, precio_ingresado, prec
     precio_calculado = (float(precio_real)*float(peso))
     precio_calculado = "{:.2f}".format(precio_calculado)
 
-    print(porcentaje)
-    print(peso)
-
     peso = "{:.2f}".format((float(peso)*float(porcentaje))/100)
 
     if not os.path.exists(json_compra_plata):
