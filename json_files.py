@@ -8,6 +8,7 @@ json_plata = r"C:\raisa-bruker\files\precios_plata.json"
 
 json_compra_oro = r"C:\raisa-bruker\files\compra_oro.json"
 json_compra_plata = r"C:\raisa-bruker\files\compra_plata.json"
+json_compra = r"C:\raisa-bruker\files\compra.json"
 
 json_results = r"C:\raisa-bruker\files\results.json"
 
@@ -50,21 +51,22 @@ def precios_plata(precio_plata):
     if os.path.exists(json_plata):
         os.remove(json_plata)
 
-    ley = ["Ley 999", "Ley 950", "Ley 925", "Ley 835"]
+    ley = ["Ley 999", "Ley 950", "Ley 935", "Ley 925", "Ley 835"]
 
-    porcentaje = [99.90, 95.00, 92.50, 83.50]
+    porcentaje = [99.99, 95.00, 93.50, 92.50, 83.50]
 
     precios = []
 
     for p in porcentaje:
-        if p == 99.90:
+        if p == 99.99:
             precios.append(precio_plata)
         else:
             precios.append(round((p*precio_plata)/100.00, 2))
+    
 
     dict_precios = []
     
-    for i in range(len(precios)):
+    for i in range(len(precios)):        
         dict_precios.append({
             "Pureza": ley[i],
             "Porcentaje": str(porcentaje[i]),
@@ -74,8 +76,9 @@ def precios_plata(precio_plata):
     with open(json_plata, 'w') as fichero_plata:
         json.dump(dict_precios, fichero_plata)
 
-def compra_oro(descripcion, peso, aleacion, porcentaje, precio_ingresado, precio_real):
-    precio_ingresado = "{:.2f}".format(float(precio_ingresado))
+# def compra_oro(descripcion, peso, aleacion, porcentaje, precio_ingresado, precio_real):
+def compra_oro(descripcion, peso, aleacion, porcentaje, precio_real):
+    # precio_ingresado = "{:.2f}".format(float(precio_ingresado))
     
     precio_calculado = (float(precio_real)*float(peso))
     precio_calculado = "{:.2f}".format(precio_calculado)
@@ -91,16 +94,18 @@ def compra_oro(descripcion, peso, aleacion, porcentaje, precio_ingresado, precio
     compras_oro.append({
         "Descripcion": descripcion,
         "Aleacion": aleacion,
-        "Peso": peso,
-        "Precio_calculado": precio_calculado,
-        "Precio_ingresado": precio_ingresado
+        # "Peso": peso,
+        "Peso_puro": peso,
+        "Precio": precio_calculado,
+        # "Precio_ingresado": precio_ingresado
     })
 
     with open(json_compra_oro, 'w') as fichero_compra_oro:
         json.dump(compras_oro, fichero_compra_oro)
 
-def compra_plata(descripcion, peso, aleacion, porcentaje, precio_ingresado, precio_real):
-    precio_ingresado = "{:.2f}".format(float(precio_ingresado))
+#def compra_plata(descripcion, peso, aleacion, porcentaje, precio_ingresado, precio_real):
+def compra_plata(descripcion, peso, aleacion, porcentaje, precio_real):
+    # precio_ingresado = "{:.2f}".format(float(precio_ingresado))
 
     precio_calculado = (float(precio_real)*float(peso))
     precio_calculado = "{:.2f}".format(precio_calculado)
@@ -116,13 +121,39 @@ def compra_plata(descripcion, peso, aleacion, porcentaje, precio_ingresado, prec
     compras_plata.append({
         "Descripcion": descripcion,
         "Aleacion": aleacion,
+        # "Peso": peso,
+        "Peso_puro": peso,
+        "Precio": precio_calculado,
+        # "Precio_ingresado": precio_ingresado
+    })
+
+    with open(json_compra_plata, 'w') as fichero_compra_plata:
+        json.dump(compras_plata, fichero_compra_plata)
+
+def compra(descripcion, peso, aleacion, porcentaje, precio_ingresado, precio_real):
+    precio_ingresado = "{:.2f}".format(float(precio_ingresado))
+
+    precio_calculado = (float(precio_real)*float(peso))
+    precio_calculado = "{:.2f}".format(precio_calculado)
+
+    peso = "{:.2f}".format((float(peso)*float(porcentaje))/100)
+
+    if not os.path.exists(json_compra):
+        compras = []
+    else:
+        with open(json_compra) as fichero_compra:
+            compras = json.load(fichero_compra)
+
+    compras.append({
+        "Descripcion": descripcion,
+        "Aleacion": aleacion,
         "Peso": peso,
         "Precio_calculado": precio_calculado,
         "Precio_ingresado": precio_ingresado
     })
 
-    with open(json_compra_plata, 'w') as fichero_compra_plata:
-        json.dump(compras_plata, fichero_compra_plata)
+    with open(json_compra, 'w') as fichero_compra:
+        json.dump(compras, fichero_compra)
 
 def datos_results():
     info_shoots.limpiar_results()

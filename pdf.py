@@ -48,7 +48,7 @@ def impresion_venta(foto, joyeria, contaminantes):
 
     pdf.output(pdf_ventas + "/" + "Venta nueva.pdf")
 
-impresion_venta(r"C:\raisa-bruker\foto\aretes-abstracciones-pluma-01-400x400.jpg", "Zn: 9.28 Cu: 26.04 Au: 58.6", "Ni: 6.08")
+# impresion_venta(r"C:\raisa-bruker\foto\aretes-abstracciones-pluma-01-400x400.jpg", "Zn: 9.28 Cu: 26.04 Au: 58.6", "Ni: 6.08")
 
 
 def impresion_compra(n_compra, tipo_compra, total_compra):
@@ -91,8 +91,8 @@ def impresion_compra(n_compra, tipo_compra, total_compra):
         datos_pieza = []
         datos_pieza.append(pieza["Descripcion"])
         datos_pieza.append(pieza["Aleacion"])
-        datos_pieza.append("{}g".format(float(pieza["Peso"])))
-        datos_pieza.append("$ {}".format(float(pieza["Precio_ingresado"])))
+        datos_pieza.append("{}g".format(float(pieza["Peso_puro"])))
+        datos_pieza.append("$ {}".format(float(pieza["Precio"])))
 
         datos.append(datos_pieza)
     

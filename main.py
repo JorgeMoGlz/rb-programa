@@ -56,7 +56,7 @@ class VentanaConsultas(QWidget):
 
         ############################## WIDGETS ##############################
         # Widgets del layout encabezado
-        label_titulo = Caja("Pieza analizada", "Arial")
+        label_titulo = Caja("Selecciona las fechas", "Arial")
 
         # Widgets del layout calendario
         calendar_1 = QCalendarWidget()
@@ -77,6 +77,9 @@ class VentanaConsultas(QWidget):
 
         # Widgets del layout información
         self.table_consulta = QTableWidget()
+        self.labels_encabezado = ["pieza", "porcentaje", "aleacion", "peso", "precio_calculado", "precio_cliente"]
+        self.table_consulta.setColumnCount(len(self.labels_encabezado))
+        self.table_consulta.setHorizontalHeaderLabels(self.labels_encabezado)
 
         #####################################################################
 
@@ -264,6 +267,8 @@ class VentanaCompras(QWidget):
         # Variable para saber la aleacion
         self.aleacion = "24K"
 
+        # Variable para saber si es una compra nueva
+        self.nueva_compra = True
 
         # Creación de la compra
         self.id_oro, act_oro, self.precio_oro = db.ultimo_precio_oro()[0]
@@ -346,8 +351,9 @@ class VentanaCompras(QWidget):
         self.textbox_peso = QLineEdit()
         self.textbox_peso.setPlaceholderText("Peso de la pieza")
 
-        self.textbox_precio = QLineEdit()
-        self.textbox_precio.setPlaceholderText("Precio de la pieza")
+        # self.textbox_precio = QLineEdit()
+        # self.textbox_precio.setPlaceholderText("Precio de la pieza")
+        self.label_precio = Caja("Precio de la aleación")
 
         # Widgets del layout obtener info
         button_obtener = QPushButton("Calcular precio")
@@ -355,9 +361,11 @@ class VentanaCompras(QWidget):
 
         # Widgets del layout datos compra
         self.table_compra = QTableWidget()
-        self.labels_encabezado = ["Descripcion", "Aleacion", "Peso", "Precio_calculado", "Precio_ingresado"]
+        # self.labels_encabezado = ["Descripcion", "Aleacion", "Peso", "Precio_calculado", "Precio_ingresado"]
+        self.labels_encabezado = ["Descripcion", "Aleacion", "Peso_puro", "Precio"]
         self.table_compra.setColumnCount(len(self.labels_encabezado))
         self.table_compra.setHorizontalHeaderLabels(self.labels_encabezado)
+        self.table_compra.itemChanged.connect(self.modificacion)
 
         # Widgets del layout total
         self.label_total = Caja("0", "Arial")
@@ -379,7 +387,8 @@ class VentanaCompras(QWidget):
         
         layout_datos.addWidget(self.textbox_descripcion)
         layout_datos.addWidget(self.textbox_peso)
-        layout_datos.addWidget(self.textbox_precio)
+        # layout_datos.addWidget(self.textbox_precio)
+        layout_datos.addWidget(self.label_precio)
 
         layout_obtenerinfo.addWidget(button_obtener)
 
@@ -446,6 +455,7 @@ class VentanaCompras(QWidget):
                     self.porcentaje = dato["Porcentaje"]
 
         print(self.precio)
+        self.label_precio.setText("${} por gramo".format(self.precio))
   
     def obtener_datos(self):
         print("Datos obtenidos")
@@ -457,45 +467,73 @@ class VentanaCompras(QWidget):
         
         self.peso_pieza = self.textbox_peso.text()
         
-        self.precio_ingresado = self.textbox_precio.text()
+        # self.precio_ingresado = self.textbox_precio.text()
 
         if self.elemento == "Oro":
             
-            json_files.compra_oro(self.descripcion_pieza, self.peso_pieza, self.aleacion, self.porcentaje, self.precio_ingresado, self.precio)
+            # json_files.compra_oro(self.descripcion_pieza, self.peso_pieza, self.aleacion, self.porcentaje, self.precio_ingresado, self.precio)
+            json_files.compra_oro(self.descripcion_pieza, self.peso_pieza, self.aleacion, self.porcentaje, self.precio)
 
             with open(json_compra_oro) as fichero_compra_oro:
-                compras_oro = json.load(fichero_compra_oro)
+                self.compras_oro = json.load(fichero_compra_oro)
 
-            for compra in compras_oro:
-                self.total = float(compra["Precio_ingresado"]) + float(self.total)
+            for compra in self.compras_oro:
+                self.total = float(compra["Precio"]) + float(self.total)
                 self.total = round(self.total, 2)
             
-            self.table_compra.setRowCount(len(compras_oro))
+            self.table_compra.setRowCount(len(self.compras_oro))
 
-            for i, fila in enumerate(compras_oro):
+            for i, fila in enumerate(self.compras_oro):
                 for j, columna in enumerate(self.labels_encabezado):
                     item = QTableWidgetItem()
                     item.setData(Qt.EditRole, fila[columna])
                     self.table_compra.setItem(i, j, item)
         else:
-            json_files.compra_plata(self.descripcion_pieza, self.peso_pieza, self.aleacion, self.porcentaje, self.precio_ingresado, self.precio)
+            # json_files.compra_plata(self.descripcion_pieza, self.peso_pieza, self.aleacion, self.porcentaje, self.precio_ingresado, self.precio)
+            json_files.compra_plata(self.descripcion_pieza, self.peso_pieza, self.aleacion, self.porcentaje, self.precio)
 
             with open(json_compra_plata) as fichero_compra_plata:
-                compras_plata = json.load(fichero_compra_plata)
+                self.compras_plata = json.load(fichero_compra_plata)
 
-            for compra in compras_plata:
-                self.total = float(compra["Precio_ingresado"]) + float(self.total)
+            for compra in self.compras_plata:
+                self.total = float(compra["Precio"]) + float(self.total)
                 self.total = round(self.total, 2)
             
-            self.table_compra.setRowCount(len(compras_plata))
+            self.table_compra.setRowCount(len(self.compras_plata))
 
-            for i, fila in enumerate(compras_plata):
+            for i, fila in enumerate(self.compras_plata):
                 for j, columna in enumerate(self.labels_encabezado):
                     item = QTableWidgetItem()
                     item.setData(Qt.EditRole, fila[columna])
                     self.table_compra.setItem(i, j, item)
         
-        self.label_total.setText(str(self.total))
+        self.label_total.setText("${}".format(self.total))
+        self.nueva_compra = False
+
+    def modificacion(self, item):
+        if not self.nueva_compra:
+            self.total = 0
+            fila, campo = item.row(), self.labels_encabezado[item.column()]
+
+            if self.elemento == "Oro":
+                self.compras_oro[fila][campo] = item.data(Qt.EditRole)
+                for compra in self.compras_oro:
+                    self.total = float(compra["Precio"]) + float(self.total)
+                    self.total = round(self.total, 2)
+
+                with open(json_compra_oro, "w") as fichero_compra_oro:
+                    json.dump(self.compras_oro, fichero_compra_oro)
+            else:
+                self.compras_plata[fila][campo] = item.data(Qt.EditRole)
+
+                for compra in self.compras_plata:
+                    self.total = float(compra["Precio"]) + float(self.total)
+                    self.total = round(self.total, 2)
+
+                with open(json_compra_plata, "w") as fichero_compra_plata:
+                    json.dump(self.compras_plata, fichero_compra_plata)
+
+        self.label_total.setText("${}".format(self.total))
 
     def confirmar(self):
         if self.elemento == "Oro":
@@ -514,11 +552,12 @@ class VentanaCompras(QWidget):
             pieza_ind = []
 
             compra_ind.append(self.id_compra)
-            compra_ind.append(compra["Precio_calculado"])
-            compra_ind.append(compra["Precio_ingresado"])
+            compra_ind.append(compra["Precio"])
+            compra_ind.append("0")
+            # compra_ind.append(compra["Precio_ingresado"])
 
             pieza_ind.append(compra["Descripcion"])
-            pieza_ind.append(compra["Peso"])
+            pieza_ind.append(compra["Peso_puro"])
             pieza_ind.append(compra["Aleacion"])
             pieza_ind.append(self.id_compra)
 

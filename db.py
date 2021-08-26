@@ -211,3 +211,53 @@ def pieza(datos):
     conn.commit()
     print("Pieza creada")
 
+def consulta_compras(fecha_inicial='2021-01-01', fecha_final='2021-12-12'):
+    conn = create_connection(db_file)
+    db = conn.cursor()
+
+    db.execute(
+        """
+            SELECT id_compra, precio_calculado
+            FROM compra
+            WHERE fecha_compra >= '{}' AND fecha_compra <= '{}'
+        """.format(fecha_inicial, fecha_final)
+    )
+
+    consulta = db.fetchall()
+    
+    return consulta
+
+def consulta_piezas(id_compra):
+    conn = create_connection(db_file)
+    db = conn.cursor()
+
+    db.execute(
+        """
+            SELECT nombre, peso, aleacion
+            FROM pieza
+            WHERE id_compra = {}
+        """.format(id_compra)
+    )
+
+    consulta = db.fetchall()
+
+    return consulta
+
+# dict_consultas = []
+# for compra in consulta_compras():
+
+#     id_compra = compra[0]
+#     precio_total = compra[1]
+
+#     for pieza in consulta_piezas(id_compra):
+#         dict_consultas.append({
+#             "id_compra": id_compra,
+#             "nombre_pieza": pieza[0],
+#             "peso": pieza[1],
+#             "pureza": pieza[2]
+#         })
+    
+    
+# print(dict_consultas, precio_total)
+
+
