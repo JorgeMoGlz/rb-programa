@@ -1,7 +1,7 @@
 import os
 import json
 
-import info_shoots
+import info_shoots, db
 
 json_oro = r"C:\raisa-bruker\files\precios_oro.json"
 json_plata = r"C:\raisa-bruker\files\precios_plata.json"
@@ -11,6 +11,7 @@ json_compra_plata = r"C:\raisa-bruker\files\compra_plata.json"
 json_compra = r"C:\raisa-bruker\files\compra.json"
 
 json_results = r"C:\raisa-bruker\files\results.json"
+json_consulta = r"C:\raisa-bruker\files\consulta.json"
 
 def precios_oro(precio_oro):
 
@@ -154,6 +155,24 @@ def compra(descripcion, peso, aleacion, porcentaje, precio_ingresado, precio_rea
 
     with open(json_compra, 'w') as fichero_compra:
         json.dump(compras, fichero_compra)
+
+def consulta(fecha_inicial, fecha_final):
+    dict_consultas = []
+    for compra in db.consulta_compras(fecha_inicial, fecha_final):
+
+        id_compra = compra[0]
+        precio_total = compra[1]
+
+        for pieza in db.consulta_piezas(id_compra):
+            dict_consultas.append({
+                "id_compra": id_compra,
+                "nombre_pieza": pieza[0],
+                "peso": pieza[1],
+                "pureza": pieza[2]
+            })
+
+        with open(json_consulta, "w") as fichero_consulta:
+            json.dump(dict_consultas, fichero_consulta)
 
 def datos_results():
     info_shoots.limpiar_results()

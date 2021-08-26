@@ -256,7 +256,7 @@ def consulta_piezas(id_compra):
 #             "peso": pieza[1],
 #             "pureza": pieza[2]
 #         })
-    
+
     
 # print(dict_consultas, precio_total)
 

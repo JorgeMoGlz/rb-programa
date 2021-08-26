@@ -113,7 +113,7 @@ class VentanaConsultas(QWidget):
         print(formats.format_stringdate(date.toString()))
 
     def consultar(self):
-        print("Consulta")
+        json_files.consulta(self.fecha_1, self.fecha_2)
 
 class VentanaVentas(QWidget):
     def __init__(self):
